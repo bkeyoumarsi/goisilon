@@ -13,7 +13,10 @@ TBA
 TBA
 
 ## Environment Variables
-TBA
+    GOISILON_ENDPOINT - the API endpoint, ie. https://10.5.132.140:8080/
+    GOISILON_USERNAME - the username
+    GOISILON_PASSWORD - the password
+    GOISILON_INSECURE - whether to skip SSL validation
 
 ## Contributions
 If you are familiar with Isilon cluster APIs please help. It will be greatly appreciated.
