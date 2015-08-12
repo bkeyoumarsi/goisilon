@@ -15,11 +15,11 @@ import (
 type Client struct {
 	httpClient *http.Client
 	endpoint   string
-	usr        string
-	pass       string
+	username   string
+	password   string
 }
 
-func NewClient(endpoint, usr, pass string, insecure bool) *Client {
+func NewClient(endpoint, username, password string, insecure bool) *Client {
 	var httpClient *http.Client
 	if insecure {
 		tr := &http.Transport{
@@ -29,15 +29,20 @@ func NewClient(endpoint, usr, pass string, insecure bool) *Client {
 	} else {
 		httpClient = http.DefaultClient
 	}
-	return &Client{httpClient, endpoint, usr, pass}
+	return &Client{httpClient, endpoint, username, password}
 }
 
-func (r *Client) Get(api string) (interface{}, error) {
+func (r *Client) Get(api string, headers map[string]string) (interface{}, error) {
 	url := fmt.Sprintf("%s%s", r.endpoint, api)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
+	}
+
+	req.SetBasicAuth(r.username, r.password)
+	for k, v := range headers {
+		req.Header.Add(k, v)
 	}
 
 	resp, err := r.httpClient.Do(req)
@@ -49,10 +54,6 @@ func (r *Client) Get(api string) (interface{}, error) {
 		return nil, err
 	}
 
-	return getJsonBody(resp)
-}
-
-func getJsonBody(resp *http.Response) (interface{}, error) {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

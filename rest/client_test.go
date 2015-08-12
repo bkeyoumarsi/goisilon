@@ -1,22 +1,18 @@
 package rest
 
-import (
-	"log"
-	"testing"
+import "testing"
+
+const (
+	endpoint = "https://10.28.102.200:8080"
+	username = "root"
+	password = "a"
+	insecure = true
 )
 
-// Tests both CreateVolume and CheckVolume
-func TestCreateVolume(t *testing.T) {
-	c := NewClient("10.28.102.200", "root", "a")
-	err := c.CreateVolume("test")
-	if err != nil {
-		log.Println(err.Error())
-		t.Fail()
-	}
-
-	b, err := c.CheckVolume("test")
-	if err != nil || !b {
-		log.Println(err.Error())
+func TestError(t *testing.T) {
+	c := NewClient(endpoint, username, password, insecure)
+	_, err := c.Get("/platform/DoesNotExist", nil)
+	if err == nil {
 		t.Fail()
 	}
 }
