@@ -33,12 +33,17 @@ func NewClient(endpoint, username, password string, insecure bool) *Client {
 	return &Client{httpClient, endpoint, username, password}
 }
 
-func (r *Client) Get(api string, headers map[string]string) (interface{}, error) {
+func (r *Client) Do(method, api string, headers map[string]string, body io.Reader) (interface{}, error) {
 	url := fmt.Sprintf("%s%s", r.endpoint, api)
+	var data interface{}
 
-	req, err := r.createRequest("GET", url, nil, headers)
+	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
+	}
+	req.SetBasicAuth(r.username, r.password)
+	for k, v := range headers {
+		req.Header.Add(k, v)
 	}
 
 	resp, err := r.httpClient.Do(req)
@@ -50,47 +55,20 @@ func (r *Client) Get(api string, headers map[string]string) (interface{}, error)
 		return nil, err
 	}
 
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
+	if method == "GET" {
+		defer resp.Body.Close()
+		respBody, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
 
-	var data interface{}
-	err = json.Unmarshal(body, &data)
-	if err != nil {
-		return nil, err
+		err = json.Unmarshal(respBody, &data)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return data, nil
-}
-
-func (r *Client) Put(api string, headers map[string]string, body io.Reader) error {
-	url := fmt.Sprintf("%s%s", r.endpoint, api)
-
-	req, err := r.createRequest("PUT", url, body, headers)
-	if err != nil {
-		return err
-	}
-
-	resp, err := r.httpClient.Do(req)
-	if err != nil {
-		return err
-	}
-
-	return responseCheck(resp)
-}
-
-func (r *Client) createRequest(method, url string, body io.Reader, headers map[string]string) (*http.Request, error) {
-	req, err := http.NewRequest(method, url, body)
-	if err != nil {
-		return nil, err
-	}
-	req.SetBasicAuth(r.username, r.password)
-	for k, v := range headers {
-		req.Header.Add(k, v)
-	}
-	return req, nil
 }
 
 func responseCheck(resp *http.Response) error {
