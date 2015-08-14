@@ -8,6 +8,7 @@ type IsiClient struct {
 	HttpClient *rest.Client
 }
 
-func NewApiClient(r *rest.Client) (*IsiClient, error) {
-	return &IsiClient{r}, nil
+func NewApiClient(endpoint, username, password string, insecure bool) *IsiClient {
+	r := rest.NewClient(endpoint, username, password, insecure)
+	return &IsiClient{r}
 }
