@@ -1,18 +1,13 @@
 package goisilon
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 
+	types "github.com/bkeyoumarsi/goisilon/types/v1"
 	"github.com/mitchellh/mapstructure"
 )
-
-type DirChildren struct {
-	Name string `json:"name"`
-}
-
-type Directory struct {
-	Children []DirChildren `json:"children"`
-}
 
 // Path arguemnt must start with /ifs/
 func (c *IsiClient) CreateDirectory(path string, headers map[string]string, recursive bool) error {
@@ -32,7 +27,7 @@ func (c *IsiClient) CreateDirectory(path string, headers map[string]string, recu
 	return err
 }
 
-// Path arguemnt must start with /ifs/
+// parentDir arguemnt must start with /ifs/
 func (c *IsiClient) DirectoryExists(parentDir, dirName string) (bool, error) {
 	url := fmt.Sprintf("/namespace/%s", parentDir)
 
@@ -41,7 +36,7 @@ func (c *IsiClient) DirectoryExists(parentDir, dirName string) (bool, error) {
 		return false, err
 	}
 
-	var content Directory
+	var content types.Directory
 	err = mapstructure.Decode(data, &content)
 	if err != nil {
 		return false, err
@@ -64,5 +59,17 @@ func (c *IsiClient) DeleteDirectory(path string, recursive bool) error {
 	url := fmt.Sprintf("/namespace/%s?recursive=%s", path, rec)
 
 	_, err := c.HttpClient.Do("DELETE", url, nil, nil)
+	return err
+}
+
+func (c *IsiClient) UpdateDirAcl(path string, body types.AclRequest) error {
+	url := fmt.Sprintf("/namespace/%s?acl", path)
+
+	b, err := json.Marshal(body)
+	if err != nil {
+		return err
+	}
+
+	_, err = c.HttpClient.Do("PUT", url, nil, bytes.NewBuffer(b))
 	return err
 }
