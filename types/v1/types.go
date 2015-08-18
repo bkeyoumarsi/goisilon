@@ -39,3 +39,14 @@ type AclRequest struct {
 	Mode          string    `json:"mode"`
 	Acl           []Acl     `json:"acl"`
 }
+
+type SnapshotCreate struct {
+	Name    string `json:"name"`
+	Path    string `json:"path"`
+	Alias   string `json:"alias"`
+	Expires int32  `json:"expires"`
+}
+
+type SnapshotID struct {
+	Id string `json:"id"`
+}
