@@ -1,16 +1,31 @@
 # GoIsilon
 
 ## Overview
-```GoIsilon``` represents API bindings for Go that allow you to manage Isilon storage platforms.  In the true nature of API bindings, it is intended that the functions available are basically a direct implementation of what is available through the API.
-
-## API Compatibility
-TBA
+GoIsilon represents API bindings for Go that allow you to manage Isilon storage platforms.  In the true nature of API bindings, it is intended that the functions available are basically a direct implementation of what is available through the API.
 
 ## Functions
-TBA
+- CreateDirectory - creates a new directory under the /ifs/
+- DirectoryExists - checks the existance of a directory on the filesystem
+- DeleteDirectory - deletes the given directory path
+- UpdateDirAcl - updates directory's ACL configuration with given params
 
 ## Examples
-TBA
+Note: You can use each api handler's corresponding test files for more reference.
+
+Initialize Isilon package
+```Go
+isi, err := goisilon.New()
+if err != nil {
+   return nil, err.Error()
+}
+```
+
+Create a directory
+```Go
+headers := make(map[string]string)
+headers["x-isi-ifs-access-control"] = "public_read_write"
+err := isi.CreateDirectory("/ifs/data/test", headers, false)
+```
 
 ## Environment Variables
     GOISILON_ENDPOINT - the API endpoint, ie. https://10.5.132.140:8080/

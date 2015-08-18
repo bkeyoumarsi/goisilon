@@ -6,10 +6,10 @@ import (
 	"os"
 	"strconv"
 
-	isiApi "github.com/bkeyoumarsi/goisilon/api"
+	isi "github.com/bkeyoumarsi/goisilon/api"
 )
 
-func New() (*isiApi.IsiClient, error) {
+func New() (*isi.IsiClient, error) {
 	endpoint := os.Getenv("GOISILON_ENDPOINT")
 	if endpoint != "" {
 		_, err := url.ParseRequestURI(endpoint)
@@ -35,5 +35,5 @@ func New() (*isiApi.IsiClient, error) {
 		return nil, errors.New("GOISILON_PASSWORD: missing value")
 	}
 
-	return isiApi.NewApiClient(endpoint, username, password, insecure), nil
+	return isi.NewApiClient(endpoint, username, password, insecure), nil
 }
