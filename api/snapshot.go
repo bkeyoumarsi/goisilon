@@ -6,20 +6,20 @@ import (
 	"errors"
 
 	types "github.com/bkeyoumarsi/goisilon/types/v1"
-	"github.com/mitchellh/mapstructure"
 )
 
-func (c *IsiClient) CreateSnapshot(req types.SnapshotCreate) (string, error) {
+func (c *IsiClient) CreateSnapshot(req types.SnapshotCreateReq) (string, error) {
 	body, err := json.Marshal(req)
 	if err != nil {
 		return "", errors.New("Failed to encode request to json")
 	}
 
-	resp, err := c.HttpClient.Do("POST", Snapshots, nil, bytes.NewBuffer(body))
+	_, err = c.HttpClient.Do("POST", Snapshots, nil, bytes.NewBuffer(body), false)
 	if err != nil {
 		return "", err
 	}
 
+	/* Ignoring the response until PAPI handler is fixed and matches spec
 	var snapID types.SnapshotID
 	err = mapstructure.Decode(resp, &snapID)
 	if err != nil {
@@ -27,4 +27,6 @@ func (c *IsiClient) CreateSnapshot(req types.SnapshotCreate) (string, error) {
 	}
 
 	return snapID.Id, nil
+	*/
+	return "", nil
 }

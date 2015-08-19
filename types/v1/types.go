@@ -31,7 +31,7 @@ type Acl struct {
 	Op           string    `json:"op"`
 }
 
-type AclRequest struct {
+type AclUpdateReq struct {
 	Authoritative string    `json:"authoritative"` // Mandatory
 	Action        string    `json:"action"`
 	Owner         Ownership `json:"owner"`
@@ -40,7 +40,7 @@ type AclRequest struct {
 	Acl           []Acl     `json:"acl"`
 }
 
-type SnapshotCreate struct {
+type SnapshotCreateReq struct {
 	Name    string `json:"name"`
 	Path    string `json:"path"`
 	Alias   string `json:"alias"`

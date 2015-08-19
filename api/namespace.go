@@ -23,7 +23,7 @@ func (c *IsiClient) CreateDirectory(path string, headers map[string]string, recu
 	// Required headear parameter
 	headers["x-isi-ifs-target-type"] = "container"
 
-	_, err := c.HttpClient.Do("PUT", url, headers, nil)
+	_, err := c.HttpClient.Do("PUT", url, headers, nil, true)
 	return err
 }
 
@@ -31,7 +31,7 @@ func (c *IsiClient) CreateDirectory(path string, headers map[string]string, recu
 func (c *IsiClient) DirectoryExists(parentDir, dirName string) (bool, error) {
 	url := fmt.Sprintf("/namespace/%s", parentDir)
 
-	data, err := c.HttpClient.Do("GET", url, nil, nil)
+	data, err := c.HttpClient.Do("GET", url, nil, nil, false)
 	if err != nil {
 		return false, err
 	}
@@ -58,11 +58,11 @@ func (c *IsiClient) DeleteDirectory(path string, recursive bool) error {
 	}
 	url := fmt.Sprintf("/namespace/%s?recursive=%s", path, rec)
 
-	_, err := c.HttpClient.Do("DELETE", url, nil, nil)
+	_, err := c.HttpClient.Do("DELETE", url, nil, nil, true)
 	return err
 }
 
-func (c *IsiClient) UpdateDirAcl(path string, body types.AclRequest) error {
+func (c *IsiClient) UpdateDirAcl(path string, body types.AclUpdateReq) error {
 	url := fmt.Sprintf("/namespace/%s?acl", path)
 
 	b, err := json.Marshal(body)
@@ -70,6 +70,6 @@ func (c *IsiClient) UpdateDirAcl(path string, body types.AclRequest) error {
 		return err
 	}
 
-	_, err = c.HttpClient.Do("PUT", url, nil, bytes.NewBuffer(b))
+	_, err = c.HttpClient.Do("PUT", url, nil, bytes.NewBuffer(b), true)
 	return err
 }
