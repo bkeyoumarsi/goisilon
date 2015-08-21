@@ -4,10 +4,15 @@
 GoIsilon represents API bindings for Go that allow you to manage Isilon storage platforms.  In the true nature of API bindings, it is intended that the functions available are basically a direct implementation of what is available through the API.
 
 ## Functions
-- CreateDirectory - creates a new directory under the /ifs/
-- DirectoryExists - checks the existance of a directory on the filesystem
-- DeleteDirectory - deletes the given directory path
-- UpdateDirAcl - updates directory's ACL configuration with given params
+* Namespace RAN 
+   * CreateDirectory - creates a new directory under the /ifs/
+   * DirectoryExists - checks the existance of a directory on the filesystem
+   * DeleteDirectory - deletes the given directory path
+   * UpdateDirAcl - updates directory's ACL configuration with given params
+* Snapshots
+   * GetSnapshots - get a list of snapshots
+   * CreateSnapshot - start a snapshot on a filesystem path
+   * DeleteSnapshot - delete the snapshot
 
 ## Examples
 Note: You can use each api handler's corresponding test files for more reference.
