@@ -1,5 +1,7 @@
 package goisilon
 
+type Timestamp int32
+
 type ErrObjects struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
@@ -41,12 +43,31 @@ type AclUpdateReq struct {
 }
 
 type SnapshotCreateReq struct {
-	Name    string `json:"name"`
-	Path    string `json:"path"`
-	Alias   string `json:"alias"`
-	Expires int32  `json:"expires"`
+	Name    string    `json:"name"`
+	Path    string    `json:"path"`
+	Alias   string    `json:"alias"`
+	Expires Timestamp `json:"expires"`
 }
 
-type SnapshotID struct {
-	Id string `json:"id"`
+type Snapshot struct {
+	Id              int       `json:"id"`
+	Name            string    `json:"name"`
+	Schedule        string    `json:"schedule"`
+	Created         Timestamp `json:"created"`
+	Expires         Timestamp `json:"expires"`
+	Path            string    `json:"path"`
+	Size            int       `json:"size"`
+	ShadowBlocks    int       `json:"shadow_blocks"`
+	PctFilesystem   float32   `json:"pct_filesystem"`
+	PctReserve      float32   `json:"pct_reserve"`
+	AliasTarget     int       `json:"alias_target"`
+	AliasTargetName string    `json:"alias_target_name"`
+	HasLocks        bool      `json:"has_locks"`
+	State           string    `json:"state"`
+}
+
+type SnapshotList struct {
+	Snapshots []Snapshot `json:"snapshots"`
+	Total     int        `json:"total"`
+	resume    string     // Don't really care
 }

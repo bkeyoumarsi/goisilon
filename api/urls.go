@@ -1,6 +1,6 @@
 package goisilon
 
 const (
-	Snapshots       = "/platform/1/snapshot/snapshots"
-	SnapshotSummary = "/platform/1/snapshot/snapshots-summary"
+	SnapshotsApi       = "/platform/1/snapshot/snapshots"
+	SnapshotSummaryApi = "/platform/1/snapshot/snapshots-summary"
 )
