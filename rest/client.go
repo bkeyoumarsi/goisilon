@@ -33,7 +33,8 @@ func NewClient(endpoint, username, password string, insecure bool) *Client {
 	return &Client{httpClient, endpoint, username, password}
 }
 
-func (r *Client) Do(method, api string, headers map[string]string, body io.Reader) (interface{}, error) {
+func (r *Client) Do(method, api string, headers map[string]string,
+	body io.Reader, ignoreResponse bool) (interface{}, error) {
 	url := fmt.Sprintf("%s%s", r.endpoint, api)
 	var data interface{}
 
@@ -55,7 +56,7 @@ func (r *Client) Do(method, api string, headers map[string]string, body io.Reade
 		return nil, err
 	}
 
-	if method == "GET" {
+	if !ignoreResponse {
 		defer resp.Body.Close()
 		respBody, err := ioutil.ReadAll(resp.Body)
 		if err != nil {

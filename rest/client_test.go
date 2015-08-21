@@ -3,15 +3,15 @@ package rest
 import "testing"
 
 const (
-	endpoint = "https://10.28.102.200:8080"
+	endpoint = "https://10.28.104.191:8080"
 	username = "root"
-	password = "a"
+	password = "test_pass"
 	insecure = true
 )
 
 func TestError(t *testing.T) {
 	c := NewClient(endpoint, username, password, insecure)
-	_, err := c.Do("GET", "/platform/DoesNotExist", nil, nil)
+	_, err := c.Do("GET", "/platform/DoesNotExist", nil, nil, true)
 	if err == nil {
 		t.Fail()
 	}
@@ -19,7 +19,7 @@ func TestError(t *testing.T) {
 
 func TestDoRequest(t *testing.T) {
 	c := NewClient(endpoint, username, password, insecure)
-	data, err := c.Do("GET", "/platform/1/cluster/statfs", nil, nil)
+	data, err := c.Do("GET", "/platform/1/cluster/statfs", nil, nil, false)
 	if err != nil {
 		t.Fail()
 	}
